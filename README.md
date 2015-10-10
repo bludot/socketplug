@@ -2,6 +2,9 @@
 
 The new available service offering sockets to anyone!
 
+__What ever you do, don't look in public_html. Be warned! some ugly old code in
+there that needs to be rewritten__
+
 ## History:
 A branch of Moniker which got carried away to some other malformed project. Thus
 SocketPlug was born. Initially the idea behind SocketPlug was to make a plugable
