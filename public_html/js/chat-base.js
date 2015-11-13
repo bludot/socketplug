@@ -1,29 +1,56 @@
-window.onload = function() {
-        init({
-            login_window: document.querySelector('#login').parentNode.parentNode,
-            login_input: document.querySelector('#login'),
-            msginput: document.querySelector('#msgbox'),
-            chat_view: document.querySelector('main'),
-            rooms: false,
-            generate_msg: function(data) {
-                generate_time = function(user) {
-            var date = new Date();
-                var time = date.getHours() + ':' + date.getMinutes();
-                var add = document.createElement('p');
-                add.time = document.createElement('time');
-                add.user = document.createElement('mark');
-                add.user.className = "username";
-                add.time.appendChild(document.createTextNode(time));
-                add.user.appendChild(document.createTextNode(user));
-                add.appendChild(add.time);
-                add.appendChild(add.user);
-                return add;
-          };
-          var msg = generate_time(data.username);
-                message = markdown.renderJsonML(markdown.toHTMLTree(data.message));
-                msg.innerHTML += message;
-                return msg;
-      }
-        });
-document.querySelector('#login').parentNode.parentNode.style.cssText = "position: fixed; z-index: 1; top: 0; bottom: 0; background: rgb(247, 247, 247); left: 0; right: 0;";
+(function(io, socketplug) {
+
+    console.log("its going");
+
+    var socket_events = {
+        "chat": {
+            events: {
+                'join': function(data) {
+                    console.log("logged in!");
+                    var node = document.querySelector('#loginbox');
+                    node.parentNode.removeChild(node);
+                },
+                'msg': function(data) {
+                    var msg_ = document.createElement('div');
+                    msg_.className = "msg-box";
+                    msg_.user = document.createElement('div');
+                    msg_.user.className = "msg-title";
+                    msg_.msg = document.createElement('div');
+                    msg_.msg.className = "msg-content";
+                    msg_.user.appendChild(document.createTextNode(data.username));
+                    msg_.msg.appendChild(document.createTextNode(data.message));
+                    msg_.appendChild(msg_.user);
+                    msg_.appendChild(msg_.msg);
+                    document.querySelector('#room-' + data.room).querySelector('.msg').appendChild(msg_);
+                }
+            }
+        }
     }
+
+    var socket = socketplug({
+        apikey: "username",
+        apisecret: "password",
+        socket_events: socket_events,
+        services: ["chat"]
+    });
+    document.querySelector("#username").addEventListener('keypress', function(e) {
+
+        var e = e || window.event;
+        if (e.which == 13) {
+            console.log("test");
+            socket.services.chat.socket.emit('login', {
+                username: this.value
+            })
+            document.querySelector('main').querySelector('input').addEventListener('keypress', function(e) {
+                var e = e || window.event;
+                if (e.which == 13) {
+                    socket.services.chat.socket.emit('msg', {
+                        msg: this.value
+                    });
+                    this.value = "";
+                }
+            });
+
+        }
+    });
+})(io, socketplug)

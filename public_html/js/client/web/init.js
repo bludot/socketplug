@@ -1,177 +1,111 @@
-var init = (function(init_data) {
-    var init_data = init_data;
+/*(function(io) {
+  console.log("starting");
+    
 
-    var config = {
-        rooms: init_data.rooms
-    }
-    console.log("we started init!");
+})(io);*/
+var socketplug = function(data) {
+    console.log("loading socketplug");
+    var socketplug = {};
+    socketplug.config = {
+        rooms: true
+    };
+
+    socketplug.action = {
+        event: null
+    };
+    //var access_token = access_token;
+    var _data = data;
+    var data = "grant_type=password&username=" + _data.apikey + "&password=" + _data.apisecret;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+            var data = JSON.parse(this.responseText);
+            console.log(_data);
+            init(data, _data);
+        }
+    });
+
+    xhr.open("POST", "http://socketplug.floretos.com/oauth/token");
+    xhr.setRequestHeader("authorization", "Basic Y2xpZW50OnNlY3JldA==");
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.setRequestHeader("postman-token", "a1fcb21e-e974-38d8-bd0a-05ef1ab4b2fa");
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+    xhr.send(data);
+    var init = function(data, _data) {
+        var data = data;
+        console.log(data);
 
 
-    // Add the socket script
-    var socketjs = document.createElement('script');
-    //socketjs.src = "http://moniker.floretos.com:8080/socket.io/socket.io.js";
-    if(location.hash == "#hook-moniker" || (location.href !== "https://moniker-bludot.c9.io/" && location.href !== "http://moniker-bludot.c9.io/")) {
-        socketjs.src = "http://moniker.floretos.com:3000/socket.io/socket.io.js";
-    } else {
-        socketjs.src = "/socket.io/socket.io.js";
-    }
-    socketjs.onload = function() {
-        var markdownparser = document.createElement('script');
-        markdownparser.src = "//moniker.floretos.com/js/markdown.min.js";
-        markdownparser.onload = function() {
-            console.log('loaded script');
-            //var socket = io.connect('http://moniker.floretos.com:8080');
-            //var socket = io.connect('http://moniker.floretos.com');
-            var socket;
-            if(location.hash == "#hook-moniker" || (location.href !== "https://moniker-bludot.c9.io/" && location.href !== "http://moniker-bludot.c9.io/")) {
-                socket = io.connect('http://moniker.floretos.com:3000', {query:"access_token="+init_data.access_token});
-            } else {    
-                socket = io.connect('/', {query:"access_token=test"});
-            }
-            socket.on('connection', function(data) {
+        console.log('loaded script');
+        //var socket = io.connect('http://socketplug.floretos.com:8080');
+        //var socket = io.connect('http://socketplug.floretos.com');
+        socketplug.data = data;
+        socketplug.services = {};
+        data.services = _data.services;
+        for (var i in data.services) {
+            var service = data.services[i];
+            socketplug.services[service] = {};
+            socketplug.services[service].socket = io.connect('http://floretos.com:3005/' + service, {
+                query: "access_token=" + data.access_token
+            });
+            socketplug.services[service].socket.service = service;
+            socketplug.services[service].socket.on('connection', function(data) {
                 console.log(data);
-                socket.emit('connect', {
+                console.log("this");
+                console.log(this);
+                this.emit('connect', {
                     msg: 'data'
                 });
             });
 
-            socket.on("join", function(data) {
+            socketplug.services[service].socket.on("join", function(data) {
                 console.log("Joined?");
-                init_data.login_window.style.zIndex = 0;
-                init_data.login_window.style.opacity = 0;
-                init_data.login_window.style.display = 'none';
-                if(init_data.join_action) {
-                    init_data.join_action(data);
-                }
+                console.log(this);
+                socketplug.action.event(this.service, "join", data, this);
             });
 
-            socket.on("user_join", function(data) {
-                if(init_data.user_join_action) {
-                    init_data.user_join_action(data);
-                }
+            socketplug.services[service].socket.on("user_join", function(data) {
+                socketplug.action.event(this.service, "user_join", data, this);
             });
 
-            socket.on("user_leave", function(data) {
-                if(init_data.user_leave_action) {
-                    init_data.user_leave_action(data);
-                }
-            });
-            
-            socket.on("sys_msg", function(data) {
-                console.log("data: " + data);
-                var message = data['message'];
-                // Setup the time the message was received
-                data.username = 'sys';
-               var msg = init_data.generate_msg(data);
-               var regexp = new RegExp(data.joiner, "gi");
-               //console.log(msg.innerHTML.toString());
-               var tmptagname = msg.tagName;
-               console.log(tmptagname);
-               console.log(msg.className);
-               var tmpclassName = msg.className || "";
-               console.log(tmpclassName);
-               msg = msg.innerHTML.toString().replace(regexp, "<mark>"+data.joiner+"</mark>");
-               console.log(msg);
-               var tmsg = document.createElement(tmptagname.toString().toLowerCase());
-               if(tmpclassName.length > 0) {
-                   tmsg.className = tmpclassName.toString();
-               }
-               console.log(tmsg);
-               tmsg.innerHTML = msg;
-               msg = tmsg;
-                // Scroll to newest message
-                if(init_data.rooms) {
-                    init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').appendChild(msg);
-                    init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').scrollTop = init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').scrollHeight;
-                } else {
-                    init_data.chat_view.appendChild(msg);
-                    init_data.chat_view.scrollTop = init_data.chat_view.scrollHeight;
-                }
+            socketplug.services[service].socket.on("user_leave", function(data) {
+                socketplug.action.event(this.service, "user_leave", data, this);
             });
 
-            socket.on('connected', function(data) {
+            socketplug.services[service].socket.on("sys_msg", function(data) {
+                socketplug.action.event(this.service, "sys_msg", data, this);
+            });
+
+            socketplug.services[service].socket.on('connected', function(data) {
                 console.log(data);
+                console.log("connected");
+                //this.action.event(this.service, "msg", data);
             });
-            socket.on('msg', function(data) {
-                var message = data['message'];
-                console.log(message);
-                var user = data.username;
-                var msg = init_data.generate_msg(data);
-                if(init_data.rooms) {
-                    init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').appendChild(msg);
-                    init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').scrollTop = init_data.chat_view.querySelector('#room-'+data.room.toString()).querySelector('.msg').scrollHeight;
-                } else {
-                    init_data.chat_view.appendChild(msg);
-                    init_data.chat_view.scrollTop = init_data.chat_view.scrollHeight;
-                }
-                console.log(data.msg);
-            });
-
-
-            /*******************************************
-             *
-             * Script for inputs
-             *
-             ********************************************/
-            init_data.msginput.addEventListener('keyup', function(e) {
-                var e = e || window.event;
-                if (e.keyCode == 13) {
-                    var msg = this.value;
-                    socket.emit('msg', {
-                        msg: msg
-                    });
-                    this.value = '';
-                }
-            });
-            init_data.login_submit.addEventListener('click', function() {
-                var msg = init_data.login_input.value;
-                    socket.emit('login', {
-                        username: msg,
-                        config: config
-                    });
-                    init_data.login_input.value = '';
-            }, false);
-            init_data.login_input.addEventListener('keyup', function(e) {
-                var e = e || window.event;
-                if (e.keyCode == 13) {
-                    var msg = this.value;
-                    socket.emit('login', {
-                        username: msg,
-                        config: config
-                    });
-                    this.value = '';
-                }
+            socketplug.services[service].socket.on('msg', function(data) {
+                socketplug.action.event(this.service, "msg", data, this)
             });
         }
-        document.body.insertBefore(markdownparser, document.body.children[0]);
-    }
-    document.body.insertBefore(socketjs, document.body.children[0]);
 
-});
+        for (var i in _data.socket_events) {
+            socketplug.services[i].socket.events = _data.socket_events[i].events;
+        }
+        console.log(_data.action_event);
+        socketplug.action.event = function(service, msg, data) {
+            console.log("some event");
+            console.log(service);
+            if (socketplug.services[service].socket.events[msg]) {
+                socketplug.services[service].socket.events[msg](data);
+            }
+            console.log(msg);
+            console.log(data);
+        };
 
-    /*
-    var socket = io.connect('http://moniker.floretos.com:8080');
-      socket.on('connection', function (data) {
-        console.log(data);
-        socket.emit('connect', { msg: 'data' });
-      });
-      socket.on('connected', function (data) {
-        console.log(data);
-      });
-      socket.on('msg', function (data) {
-        console.log(data.msg);
-      });
-      */
-    /*
-    var socket = io.connect('http://moniker.floretos.com:8080');
-      socket.on('connection', function (data) {
-        console.log(data);
-        socket.emit('connect', { msg: 'data' });
-      });
-      socket.on('connected', function (data) {
-        console.log(data);
-      });
-      socket.on('msg', function (data) {
-        console.log(data.msg);
-      });
-      */
+
+    };
+    return socketplug;
+};

@@ -1,54 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <!-- <base href="http://base.url"> -->
-
-    <title>Moniker</title>
-    <meta name="author" content="humans.txt">
-    <meta name="description" content="An IRC inspired web chat, aimed at empowering small internet communities.">
-
-    <meta name="format-detection" content="telephone=no">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <link rel="stylesheet" href="css/normalize.css" type="text/css">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:300,400,600|Ubuntu+Mono:400,700|Inconsolata:400,700|Varela+Round"
-    type="text/css" data-inprogress="">
-    <link rel="stylesheet"    href="css/dist.css"          type="text/css">
-    <link rel="shortcut icon" href="favicon.png">
-    <script src="/js/client/web/init.js"></script>
-</head>
+<html>
 <body>
-<script src="/js/chat-base.js"></script>
-    <div>
-		<div>
-			<h2>MONIKER</h2>
-            <input id="login" type="text" placeholder="username" autocomplete="off" autocorrect="off" autocapitalize="off" autofocus>
-			<input id="paswd" type="password" placeholder="****">
-		</div>
-	</div>
-    <div>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/dist.css" >
+    </head>
+    <body>
+        <div id="loginbox">
+            <input id="username"/>
+            <button id="submit_user">submit</button>
+        </div>
         <main>
-            <p><time>23:58&#x09;</time><mark>razerwolf</mark>eat a dick</p>
-
-            <p><time>23:58&#x09;</time><mark class="me">lowk</mark>no! you do it bastard...</p>
-
-            <p class="self"><time>23:58&#x09;</time><mark>bungallow7</mark> ate a dick.</p>
-
-            <p class="sys"><time>23:58&#x09;</time><mark>james</mark> has joined the chat.</p>
-
-            <p><time>23:59&#x09;</time><mark>razerwolf</mark><a href="#">http://foo.bar/lorem/ipsum.aspx</a></p>
-
-            <p><time>23:59&#x09;</time><mark>razerwolf</mark>you could use <mark class="code">ping google.com</mark> or something other than that to chieve your lorem mchinney gibbleygans of glory hype boogers inbasking achievements of yadayadayada and other cool boogies</p>
-
-            <p><time>23:59&#x09;</time><mark>razerwolf</mark>akhebgeaugoabegabegoue oubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubegakhebgeaugoabegabegoueoubeg</p>
-
-            <p><time>23:59&#x09;</time><mark>razerwolf</mark><mark>bungallow7</mark> and <mark class="me">lowk</mark> are faggots</p>
-
-            <p class="sys"><time>23:59&#x09;</time>your message couldn't be sent.</p>
+            <div class="left-sidebar">
+            </div>
+            <div id="msgs" class="main-content">
+                <div id="room-lobby" class="room on">
+                    <div id="msg" class="msg">
+                        <div class="users"></div>
+                    </div>
+                </div>
+                <div class="input">
+                    <input id="msg-input"/>
+                </div>
+            </div>
         </main>
-        <div><input id="msgbox" type="text" placeholder="" autocomplete="off" x-webkit-speech></div>
-    </div>
+        <script src="http://socketplug.floretos.com/socket.io/socket.io.js"></script>
+        <script src="http://socketplug.floretos.com/js/client/web/init.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>
