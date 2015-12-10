@@ -29,13 +29,21 @@ var socketplug = function(data) {
         }
     });
 
-    xhr.open("POST", "http://socketplug.floretos.com/oauth/token");
-    xhr.setRequestHeader("authorization", "Basic Y2xpZW50OnNlY3JldA==");
-    xhr.setRequestHeader("cache-control", "no-cache");
-    xhr.setRequestHeader("postman-token", "a1fcb21e-e974-38d8-bd0a-05ef1ab4b2fa");
-    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    if(_data.getOAuth) {
+    	console.log("using get");
+    	xhr.open("GET", "http://socketplug.floretos.com/get/oauth/?"+data);
+    	xhr.send();
+	} else {
+		console.log("using POST");
+		xhr.open("POST", "http://socketplug.floretos.com/oauth/token");
+	    xhr.setRequestHeader("authorization", "Basic Y2xpZW50OnNlY3JldA==");
+	    xhr.setRequestHeader("cache-control", "no-cache");
+	    xhr.setRequestHeader("postman-token", "a1fcb21e-e974-38d8-bd0a-05ef1ab4b2fa");
+	    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	    xhr.send(data);
+	}
 
-    xhr.send(data);
+    
     var init = function(data, _data) {
         var data = data;
         console.log(data);
