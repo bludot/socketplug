@@ -26,219 +26,63 @@ SocketPlug.init({
 ## Usage:
 Well proper docs arent here yet but im working on making it as simple as posible
 
-#### For Ionic Framework:
+#### Web Basic usage
 
-Some funky stuff right now so ill just post my working example which is not the
-pretiest right now:
-```javascript
-// Ionic Starter App
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-angular.module('ChatApp', ['ionic'])
-    .factory('_socketplug', ['$window', '$q', '$http', function($window, $q, $http) {
-        return {
-            // Initialize the socketplug API with callback to do another function
-            // when done
-            init: function(scope, callback) {
-                // we need scope to do our functions inside of the
-                // ChatController scope
-                var scope = scope;
+``` javascript
+(function(io, socketplug) {
 
-                // Standard url. Will change later when adding security as to
-                // who has access to use the chat like this (this requires
-                // socketplug backend programming)
-                var asyncUrl = "http://socketplug.floretos.com/js/client/ionic/bare/init.js";
+    console.log("its going");
 
-                // Function to load the script
-                var asyncLoad = function(asyncUrl) {
-                    var script = document.createElement('script');
-                    script.src = asyncUrl;
-                    document.body.appendChild(script);
-                };
-
-                // Lets load it!
-                asyncLoad(asyncUrl);
-
-                // Set _socketplug to what is returned so that we can add our functions to it
-                var _socketplug = this;
-                // Don't think this is needed anymore
-                _socketplug.not_loaded = true;
-
-                // Is it loaded? What about now? Now?
-                var interval = setInterval(function() {
-                    // Its loaded!
-                    if ($window.socketplug) {
-                        //$http.defaults.headers.get["Content-Type"] = "application/x-www-form-urlencoded";
-                        var req = {
-                            method: 'GET',
-                            url: 'http://socketplug.floretos.com/get/oauth/?grant_type=password&username=username&password=password',
-                            transformRequest: function(obj) {
-                                var str = [];
-                                for (var p in obj)
-                                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                                return str.join("&");
-                            },
-                        };
-                        $http(req).then(function(response) {
-                            // Lets copy everything from the loaded socketplug to the
-                            // previous "this" but that doesnt really work so add
-                            // another property to "_socketplug"
-                            console.log(response);
-                            _socketplug.socketplug = $window.socketplug(response.data.access_token);
-
-                            // Just some checks ignore these
-                            console.log("log init");
-                            console.log(this.init);
-
-                            // Don't think these are needed anymore
-                            _socketplug.not_loaded = false;
-                            _socketplug.loaded = true;
-
-                            /**
-                             * So now socketplug is loaded and we have access to its
-                             * goodies. Lets make our own functions to handle the
-                             * socket.
-                             */
-
-                            _socketplug.socketplug.login = function(username) {
-                                console.log("logging in");
-                                _socketplug.socketplug.socket.emit("login", {
-                                    username: username,
-                                    config: {
-                                        rooms: true
-                                    }
-                                });
-                            };
-                            _socketplug.socketplug.action = {};
-                            _socketplug.socketplug.action.events = {
-                                join: function(data) {
-                                    console.log("joined");
-                                    scope.loginModal.hide();
-                                    console.log(data);
-                                    scope.data = data;
-                                },
-                                msg: function(data) {
-                                    scope.newMsg(data);
-                                }
-                            }
-                            _socketplug.socketplug.sendMsg = function(msg) {
-                                _socketplug.socketplug.socket.emit('msg', {
-                                    msg: msg
-                                });
-                            };
-                            _socketplug.socketplug.action.event = function(_event, data) {
-                                if (_socketplug.socketplug.action.events[_event]) {
-                                    _socketplug.socketplug.action.events[_event](data);
-                                }
-                            };
-
-
-                            // Ok we got everything set up. Run that function we
-                            // wanted to from the start to let the app know we have
-                            // socketplug setup
-                            callback();
-                            // We dont need to check for socketplug so stop
-                            clearInterval(interval);
-                        });
-                    }
-                }, 1000);
+    var socket_events = {
+        "chat": {
+            events: {
+                'join': function(data) {
+                    console.log("logged in!");
+                    var node = document.querySelector('#loginbox');
+                    node.parentNode.removeChild(node);
+                },
+                'msg': function(data) {
+                    var msg_ = document.createElement('div');
+                    msg_.className = "msg-box";
+                    msg_.user = document.createElement('div');
+                    msg_.user.className = "msg-title";
+                    msg_.msg = document.createElement('div');
+                    msg_.msg.className = "msg-content";
+                    msg_.user.appendChild(document.createTextNode(data.username));
+                    msg_.msg.appendChild(document.createTextNode(data.message));
+                    msg_.appendChild(msg_.user);
+                    msg_.appendChild(msg_.msg);
+                    document.querySelector('#room-' + data.room).querySelector('.msg').appendChild(msg_);
+                }
             }
-        };
-    }])
-    .run(['$ionicPlatform', '$timeout', '_socketplug', function($ionicPlatform, $timeout, _socketplug) {
-        $ionicPlatform.ready(function() {
-
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-            }
-            if (window.StatusBar) {
-                StatusBar.styleDefault();
-            }
-        });
-    }]).controller('ChatController', ['$scope', '_socketplug', '$window', '$ionicModal', '$ionicLoading', '$ionicScrollDelegate', function($scope, _socketplug, $window, $ionicModal, $ionicLoading, $ionicScrollDelegate) {
-        var self = this;
-        $scope.messages = [];
-
-        // Loading functions
-        $scope.showLoading = function() {
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-        };
-        $scope.hideLoading = function() {
-            $ionicLoading.hide();
-        };
-
-        // We gotta show loading while we load socketplug
-        $scope.showLoading();
-
-        // Setup the modal for initial login
-        $ionicModal.fromTemplateUrl('login.html', function(modal) {
-            $scope.loginModal = modal;
-        }, {
-            scope: $scope,
-            animation: 'slide-in-up'
-        });
-
-        // The login function to show the login modal
-        // happens when socketplug is loaded
-        $scope.login = function() {
-            $scope.hideLoading();
-            $scope.loginModal.show();
         }
+    }
 
-        // We have to process the login when user gives username
-        $scope.processLogin = function() {
-            console.log("got the tap");
-            _socketplug.socketplug.login(self.username);
-        }
+    var socket = socketplug({
+        apikey: "username",
+        apisecret: "password",
+        socket_events: socket_events,
+        services: ["chat"]
+    });
+    document.querySelector("#username").addEventListener('keypress', function(e) {
 
-        // We are finally ready to start the app. Fetch socketplug and move on
-        // from there
-        _socketplug.init($scope, $scope.login);
-
-        // function to join the chat. Not sure if this is used
-        $scope.join = function() {
-            _socketplug.socketplug.login();
-        };
-
-        // When we send a message we call on socketplug
-        self.sendMsg = function() {
-            console.log(self.msg);
-            _socketplug.socketplug.sendMsg(self.msg);
-            self.msg = "";
-            $ionicScrollDelegate.scrollBottom();
-        };
-
-        // Theres a new message. lets add it to the messages array and to the
-        // view. Might make this different as it will become a huge array soon.
-        // SQLite?
-        $scope.newMsg = function(data) {
-            console.log(data);
-            $scope.messages.push(data);
-            $scope.$apply();
-            console.log(self.messages);
-            $ionicScrollDelegate.scrollBottom();
-        };
-
-
-        // Directive. Handles the ng-enter of buttons. This lets use hit enter
-        // on the keyboard
-    }]).directive('ngEnter', function() {
-        return function(scope, element, attrs) {
-            return element.bind("keydown keypress", function(event) {
-                if (event.which === 13) {
-                    scope.$apply(function() {
-                        scope.$eval(attrs.ngEnter);
-                    })
-
-                    event.preventDefault();
+        var e = e || window.event;
+        if (e.which == 13) {
+            console.log("test");
+            socket.services.chat.socket.emit('login', {
+                username: this.value
+            })
+            document.querySelector('main').querySelector('input').addEventListener('keypress', function(e) {
+                var e = e || window.event;
+                if (e.which == 13) {
+                    socket.services.chat.socket.emit('msg', {
+                        msg: this.value
+                    });
+                    this.value = "";
                 }
             });
-        };
-    });
 
+        }
+    });
+})(io, socketplug)
 ```
