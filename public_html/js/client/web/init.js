@@ -92,7 +92,7 @@ var socketplug = function(data) {
             socketplug.services[service].socket.on('connected', function(data) {
                 console.log(data);
                 console.log("connected");
-                //this.action.event(this.service, "msg", data);
+                socketplug.action.event(this.service, "connected", data, this);
             });
             socketplug.services[service].socket.on('msg', function(data) {
                 socketplug.action.event(this.service, "msg", data, this)

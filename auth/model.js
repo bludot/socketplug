@@ -4,6 +4,8 @@ var model = module.exports,
 
 var db = redis.createClient();
 
+db.auth("@pfelor@nge1!");
+
 var keys = {
   token: 'tokens:%s',
   client: 'clients:%s',

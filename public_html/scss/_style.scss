@@ -1,0 +1,88 @@
+body {background-color:$back}
+
+
+body > div {
+
+    background-color: $back;
+    input {
+        border     : 1px solid $ipto;
+        outline    : none;
+        color      : $base;
+        font-family: $main;
+        font-size  : $txt1;
+        background-color: $inpt;
+    }
+    input:hover {border:1px solid $ipth}
+    input:focus {border:1px solid $iptf}
+
+    // Login Panel
+    &:first-child {
+        h2 {
+            font-family: $head;
+        }
+    }
+
+    // Main Panel
+    &:last-child {
+
+        // Chat Log
+        main {
+            // Regular Text
+            font-family: $main;
+            font-size  : $txt1;
+
+            .me {color:$hlt2}  // Self-Highlight Color
+
+            // Others-Highlight Color
+            mark {
+                background-color: transparent;
+                color: $hlt1;
+                font-family: $scnd;
+                font-size: $txt2;
+                font-weight: 700;
+            }
+
+            // Code Snips
+            .code {
+                background-color: $inpt;
+                padding: 2px;
+                border-radius: 3px;
+                border: 1px solid $ipto;
+                color: $hlt3;
+                font-family: $code;
+                font-weight: 600;
+                font-size  : $txt3;
+            }
+
+            // Links
+            a {
+                color: $hlt3;
+                font-family: $code;
+                font-weight: 600;
+                font-size  : $txt3;
+            }
+
+            // Timestamps
+            time {
+                font-family: $scnd;
+                font-weight: 700;
+                font-size  : $txt3;
+                color: $gray;
+                margin-right: 10px;
+            }
+
+            // Selection Color
+            p::selection, mark::selection, a::selection, time::selection {background:$slct}
+            // Message Defaults
+            p {margin-top: 25px;time + mark:after{content:": "}}  // Regular Messages
+            p.self {color:$gray;time + mark:after{content:" "}}  // Self-Statements
+            p.sys {  // System Messages
+                color:$hlt4;
+                font-family: $scnd;
+                font-size: $txt2;
+                font-weight: 700;
+                mark:after {content:""}
+            }
+        }
+    }
+}
