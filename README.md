@@ -28,6 +28,8 @@ Well proper docs arent here yet but im working on making it as simple as posible
 
 #### Web Basic usage
 
+EX: [Chat link](http://socketplug.floretos.com/chat)
+
 ``` javascript
 (function(io, socketplug) {
 
