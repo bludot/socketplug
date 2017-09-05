@@ -1,0 +1,32 @@
+<html>
+<body>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/dist.css" >
+    </head>
+    <body>
+        <div id="loginbox">
+            <input id="username"/>
+            <button id="submit_user">submit</button>
+        </div>
+        <main>
+            <div class="left-sidebar">
+            </div>
+            <div id="msgs" class="main-content">
+                <div id="room-lobby" class="room on">
+                    <div id="msg" class="msg">
+                        <div class="users"></div>
+                    </div>
+                </div>
+                <div class="input">
+                    <input id="msg-input"/>
+                </div>
+            </div>
+        </main>
+        <script src="http://localhost:3005/socket.io/socket.io.js"></script>
+        <script src="http://localhost:3005/js/client/web/init.js"></script>
+<script src="/js/chat-base.js"></script>
+
+</body>
+</html>

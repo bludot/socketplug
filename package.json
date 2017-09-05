@@ -1,37 +1,19 @@
 {
-  "name": "socketplug.floretos.com",
+  "name": "websock.floretos.com",
   "version": "1.0.0",
-  "description": "The new available service offering sockets to anyone!",
+  "description": "",
   "main": "server.js",
-  "directories": {
-    "test": "test"
-  },
-  "dependencies": {
-    "bcrypt": "^0.8.7",
-    "body-parser": "^1.15.2",
-    "cors": "^2.7.1",
-    "express": "^4.14.0",
-    "http": "0.0.0",
-    "mysql": "^2.11.1",
-    "oauth2-server": "^2.4.1",
-    "redis": "^2.6.2",
-    "sequelize": "^3.23.4",
-    "socket.io": "^1.4.8",
-    "unirest": "^0.5.0"
-  },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bludot/socketplug.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bludot/socketplug/issues"
-  },
-  "homepage": "https://github.com/bludot/socketplug#readme"
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "http": "0.0.0",
+    "socket.io": "^1.7.1",
+    "socket.io-client": "^1.7.1"
+  }
 }
