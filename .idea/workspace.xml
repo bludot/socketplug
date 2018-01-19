@@ -2,28 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="375b02c5-977d-4379-adf2-8f43c8c0c4a4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/node_modules/eventemitter3/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/eventemitter3/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/eventemitter3/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/eventemitter3/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy/common.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy/passes/web-outgoing.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/http-proxy/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/.travis.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/requires-port/test.js" afterPath="" />
       <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -48,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="138">
-              <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+              <caret line="6" column="25" lean-forward="false" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -161,12 +139,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1516380145273</updated>
-      <workItem from="1516380146468" duration="649000" />
+      <workItem from="1516380146468" duration="1018000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="649000" />
+    <option name="totallyTimeSpent" value="1018000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-241" y="-1057" width="1920" height="1057" extended-state="6" />
@@ -207,7 +185,7 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
-          <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+          <caret line="6" column="25" lean-forward="false" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="25" />
           <folding />
         </state>
       </provider>
