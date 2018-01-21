@@ -27,7 +27,7 @@ var socketplug = function(data) {
         for (var i in data.services) {
             var service = data.services[i];
             socketplug.services[service] = {};
-            socketplug.services[service].socket = io.connect('http://localhost/' + service, {
+            socketplug.services[service].socket = io.connect(window.location.origin + '/' + service, {
             });
             /*socketplug.services[service].socket = io.connect('https://staging.ci.xertigo.com/' + service, {
                 path:'/socket.io',
