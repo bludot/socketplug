@@ -1,10 +1,14 @@
 var model = module.exports,
-  util = require('util'),
-  redis = require('redis');
+  util = require('util');
 
-var db = redis.createClient();
+var AWS = require("aws-sdk");
 
-db.auth("@pfelor@nge1!");
+AWS.config.update({
+  region: "us-east-2"
+});
+var ddb = new AWS.DynamoDB.DocumentClient();
+
+var ddbTable = 'socketplug_auth';
 
 var keys = {
   token: 'tokens:%s',
