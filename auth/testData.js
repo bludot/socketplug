@@ -22,6 +22,7 @@ ddb.putItem({
 }, function(err, data) {
   if (err) {
     console.log('ERROR!');
+    console.log(err);
   }
   console.log('completed!');
   process.exit();
