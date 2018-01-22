@@ -2,7 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var cors = require('cors');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser'),
+  oauthserver = require('oauth2-server');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,13 +20,47 @@ var corsOptions = {
 app.use(cors(corsOptions));
 //app.use(allowCrossDomain);
 
+app.oauth = oauthserver({
+  model: require('./auth/model'),
+  grants: ['password', 'refresh_token'],
+  debug: true
+});
+
+// Handle token grant requests
+app.options('*', cors(corsOptions));
+app.all('/oauth/token', cors(corsOptions), app.oauth.grant());
+
+app.get('/get/oauth', cors(corsOptions), function(req, res) {
+console.log(req.query.grant_type);
+
+    unirest.post(process.env.API_ENDPOINT+'/oauth/token')
+.headers({'Content-Type': 'application/x-www-form-urlencoded'})
+.auth('client', 'secret')
+.send("grant_type="+req.query.grant_type)
+.send("username="+req.query.username)
+.send("password="+req.query.password)
+.end(function (response) {
+  //console.log(response.body);
+  console.log(response.body);
+  res.send(response.body);
+});
+});
+
+app.get('/secret', app.oauth.authorise(), function (req, res) {
+  // Will require a valid access_token
+  res.send('Secret area');
+});
 
 app.get('/public', function (req, res) {
   // Does not require an access_token
-  res.send('Public area');
+
+  res.send('Public area: '+process.env.API_ENDPOINT);
 });
 
+// Error handling
+app.use(app.oauth.errorHandler());
 
+var unirest = require('unirest');
 
 var io = require('socket.io')(http);
 
