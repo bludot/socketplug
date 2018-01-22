@@ -11,7 +11,8 @@ var ddbTable = 'socketplug_auth';
 ddb.put({
   'TableName': ddbTable,
   'Item': {
-    user: 'admin',
+    username: 'admin',
+    id: 'admin',
     password: '$2a$10$xUcjE3omlI2dIZZVk7GAKOX9Gd4s8PHGNgtg491OuEBrj9cGYDRi2',
     clients: {
       clientId: 'client',

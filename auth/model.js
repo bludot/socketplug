@@ -19,7 +19,22 @@ var keys = {
 };
 
 model.getAccessToken = function (bearerToken, callback) {
-  db.hgetall(util.format(keys.token, bearerToken), function (err, token) {
+  ddb.scan({TableName: ddbTable,
+    FilterExpression: "tokens contains "+bearerToken
+  }, function(err, data) {
+    if (err) return callback(err);
+
+    if (!data) return callback();
+
+    callback(null, {
+      accessToken: data[0].accessToken,
+      clientId: data[0].clientId,
+      expires: data[0].expires ? new Date(data[0].expires) : null,
+      userId: data[0].id
+    });
+
+  })
+  /*  db.hgetall(util.format(keys.token, bearerToken), function (err, token) {
     if (err) return callback(err);
 
     if (!token) return callback();
@@ -30,11 +45,23 @@ model.getAccessToken = function (bearerToken, callback) {
       expires: token.expires ? new Date(token.expires) : null,
       userId: token.userId
     });
-  });
+  });*/
 };
 
 model.getClient = function (clientId, clientSecret, callback) {
-  db.hgetall(util.format(keys.client, clientId), function (err, client) {
+  ddb.scan({TableName: ddbTable,
+    FilterExpression: "id = "+clientId
+  }, function(err, data) {
+    if (err) return callback(err);
+
+    if (!data || data.clientSecret !== clientSecret) return callback();
+
+    callback(null, {
+      clientId: data[0].clientId,
+      clientSecret: data[0].clientSecret
+    });
+  });
+ /* db.hgetall(util.format(keys.client, clientId), function (err, client) {
     if (err) return callback(err);
 
     if (!client || client.clientSecret !== clientSecret) return callback();
@@ -43,7 +70,7 @@ model.getClient = function (clientId, clientSecret, callback) {
       clientId: client.clientId,
       clientSecret: client.clientSecret
     });
-  });
+  });*/
 };
 
 model.getRefreshToken = function (bearerToken, callback) {
@@ -66,11 +93,20 @@ model.grantTypeAllowed = function (clientId, grantType, callback) {
 };
 
 model.saveAccessToken = function (accessToken, clientId, expires, user, callback) {
-  db.hmset(util.format(keys.token, accessToken), {
-    accessToken: accessToken,
-    clientId: clientId,
-    expires: expires ? expires.toISOString() : null,
-    userId: user.id
+  ddb.updateItem({ TableName: ddbTable,
+    Key: {
+      username: user.username
+    },
+    UpdateExpression: "set tokens.accessToken = :a",
+    ExpressionAttributeValues: {
+      ":a": {
+        accessToken: accessToken,
+        clientId: clientId,
+        expires: expires ? expires.toISOString() : null,
+        userId: user.id
+      }
+    },
+    ReturnValues:"UPDATED_NEW"
   }, callback);
 };
 
