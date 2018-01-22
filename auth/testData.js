@@ -5,10 +5,10 @@ var AWS = require("aws-sdk");
 AWS.config.update({
   region: "us-east-2"
 });
-var ddb = new AWS.DynamoDB();
+var ddb = new AWS.DynamoDB.DocumentClient();
 
 var ddbTable = 'socketplug_auth';
-ddb.putItem({
+ddb.put({
   'TableName': ddbTable,
   'Item': {
     user: 'admin',
