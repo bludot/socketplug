@@ -6,10 +6,11 @@ var AWS = require("aws-sdk");
   region: "us-east-2"
 });*/
 var opts = {
-  region: "localhost",
-  access_key_id: "access-key-id-of-your-choice",
-  secret_access_key: "secret-key-of-your-choice",
-  endpoint: "http://localhost:8000"
+  //region: "lcoalhost,
+  region: "us-east-2",
+  //access_key_id: "access-key-id-of-your-choice",
+  //secret_access_key: "secret-key-of-your-choice",
+  //endpoint: "http://localhost:8000"
 };
 AWS.config.update(opts);
 var ddb_raw = new AWS.DynamoDB();

@@ -3,10 +3,11 @@ var bcrypt = require('bcrypt');
 
 var AWS = require("aws-sdk");
 var opts = {
-  region: "localhost",
-  access_key_id: "access-key-id-of-your-choice",
-  secret_access_key: "secret-key-of-your-choice",
-  endpoint: "http://localhost:8000"
+  //region: "localhost",
+  region: "us-east-2",
+  //access_key_id: "access-key-id-of-your-choice",
+  //secret_access_key: "secret-key-of-your-choice",
+  //endpoint: "http://localhost:8000"
 };
 AWS.config.update(opts);
 var ddb = new AWS.DynamoDB.DocumentClient();
