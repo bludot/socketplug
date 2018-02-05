@@ -3,7 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 var cors = require('cors');
 var bodyParser = require('body-parser'),
-  oauthserver = require('oauth2-server');
+  oauthserver = require('express-oauth-server'); // Would be: 'oauth2-server',
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,15 +20,15 @@ var corsOptions = {
 app.use(cors(corsOptions));
 //app.use(allowCrossDomain);
 
-app.oauth = oauthserver({
+app.oauth = new oauthserver({
   model: require('./auth/model'),
-  grants: ['password', 'refresh_token'],
-  debug: true
+  allowBearerTokensInQueryString: true,
+  accessTokenLifetime: 4 * 60 * 60
 });
 
 // Handle token grant requests
 app.options('*', cors(corsOptions));
-app.all('/oauth/token', cors(corsOptions), app.oauth.grant());
+app.all('/oauth/token', cors(corsOptions), app.oauth.token());
 
 app.get('/get/oauth', cors(corsOptions), function(req, res) {
 console.log(req.query.grant_type);
@@ -46,7 +46,7 @@ console.log(req.query.grant_type);
 });
 });
 
-app.get('/secret', app.oauth.authorise(), function (req, res) {
+app.get('/secret', app.oauth.authenticate(), function (req, res) {
   // Will require a valid access_token
   res.send('Secret area');
 });
@@ -58,7 +58,7 @@ app.get('/public', function (req, res) {
 });
 
 // Error handling
-app.use(app.oauth.errorHandler());
+//app.use(app.oauth.errorHandler());
 
 var unirest = require('unirest');
 

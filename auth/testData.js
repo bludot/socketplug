@@ -2,32 +2,79 @@
 
 var AWS = require("aws-sdk");
 
-AWS.config.update({
+/*AWS.config.update({
   region: "us-east-2"
-});
+});*/
+var opts = {
+  region: "localhost",
+  access_key_id: "access-key-id-of-your-choice",
+  secret_access_key: "secret-key-of-your-choice",
+  endpoint: "http://localhost:8000"
+};
+AWS.config.update(opts);
+var ddb_raw = new AWS.DynamoDB();
 var ddb = new AWS.DynamoDB.DocumentClient();
+var ddbTable = 'socketplug_oauth';
 
-var ddbTable = 'socketplug_auth';
-ddb.put({
-  'TableName': ddbTable,
-  'Item': {
-    username: 'admin',
-    id: 'admin',
-    password: '$2a$10$xUcjE3omlI2dIZZVk7GAKOX9Gd4s8PHGNgtg491OuEBrj9cGYDRi2',
-    clients: {
-      clientId: 'client',
-      clientSecret: 'secret',
-      grantTypes: ['password', 'refresh_token']
-    }
+var params = {
+  TableName: ddbTable,
+  KeySchema: [
+    { AttributeName: "accessToken", KeyType: "HASH"}
+  ],
+  AttributeDefinitions: [
+    /*    { AttributeName: "username", AttributeType: "S" },
+    { AttributeName: "password", AttributeType: "S" }, */
+    { AttributeName: "accessToken", AttributeType: "S" },
+    /*    { AttributeName: "access_token_expires_on", AttributeType: "S" },
+    { AttributeName: "client_id", AttributeType: "S" },
+    { AttributeName: "client_secret", AttributeType: "S" },
+    { AttributeName: "redirect_uri", AttributeType: "S" },
+    { AttributeName: "refresh_token", AttributeType: "S" },
+    { AttributeName: "refresh_token_expires_on" , AttributeType: "S" }*/
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 1,
+    WriteCapacityUnits: 1
+  },
+  StreamSpecification: {
+    StreamEnabled: false
   }
-}, function(err, data) {
+};
+
+ddb_raw.createTable(params, function(err, data) {
   if (err) {
-    console.log('ERROR!');
-    console.log(err);
+    console.log("Error", err);
+  } else {
+    console.log("Success", data);
   }
-  console.log('completed!');
-  process.exit();
+  insert();
 });
+// add to table
+function insert() {
+  console.log(Object.keys(ddb));
+  ddb.put({
+    'TableName': ddbTable,
+    'Item': {
+      username:"admin",
+      id:"admin",
+      password:"$2a$10$8NezsZYAVvo7SGkWG2igH.sbIym1/YDaNpEhF5pY4ttnp7qtiQXTe",
+      accessToken:"empty",
+      accessTokenExpiresAt: null,
+      refreshToken:"empty",
+      refreshTokenExpiresAt:null,
+      clientId:"client",
+      clientSecret:"secret",
+      grants:["password","refresh_token"]
+    }
+  }, function(err, data) {
+    if (err) {
+      console.log('ERROR!');
+      console.log(err);
+    }
+    console.log('completed!');
+    process.exit();
+  });
+}
 
 /*
 var db = require('redis').createClient();

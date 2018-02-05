@@ -28,10 +28,11 @@
     }
 
     var socket = socketplug({
-        apikey: "username",
+        apikey: "admin",
         apisecret: "password",
         socket_events: socket_events,
-        services: ["chat"]
+        services: ["chat"],
+        endpoint: window.location.origin //"http://localhost:8085"
     });
     document.querySelector("#username").addEventListener('keypress', function(e) {
 

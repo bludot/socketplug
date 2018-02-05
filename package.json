@@ -11,15 +11,17 @@
   "license": "ISC",
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.4.0",
-    "aws-sdk": "^2.185.0",
+    "aws-sdk": "^2.188.0",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
+    "co-views": "^2.1.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
+    "express-oauth-server": "^2.0.0",
     "http": "0.0.0",
-    "oauth2-server": "^2.4.1",
+    "oauth2-server": "^3.0.0",
     "socket.io": "^1.7.1",
     "socket.io-client": "^1.7.1",
-    "unirest": "^0.5.0"
+    "unirest": "^0.5.1"
   }
 }
