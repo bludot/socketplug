@@ -28,7 +28,7 @@ app.oauth = new oauthserver({
 
 // Handle token grant requests
 app.options('*', cors(corsOptions));
-app.use('/oauth/token', cors(corsOptions), app.oauth.token());
+app.all('/oauth/token', cors(corsOptions), app.oauth.token());
 
 app.get('/get/oauth', cors(corsOptions), function(req, res) {
 console.log(req.query.grant_type);
