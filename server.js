@@ -31,19 +31,19 @@ app.options('*', cors(corsOptions));
 app.all('/oauth/token', cors(corsOptions), app.oauth.token());
 
 app.get('/get/oauth', cors(corsOptions), function(req, res) {
-console.log(req.query.grant_type);
+  console.log(req.query.grant_type);
 
-    unirest.post(process.env.API_ENDPOINT+'/oauth/token')
-.headers({'Content-Type': 'application/x-www-form-urlencoded'})
-.auth('client', 'secret')
-.send("grant_type="+req.query.grant_type)
-.send("username="+req.query.username)
-.send("password="+req.query.password)
-.end(function (response) {
-  //console.log(response.body);
-  console.log(response.body);
-  res.send(response.body);
-});
+  unirest.post(process.env.API_ENDPOINT+'/oauth/token')
+    .headers({'Content-Type': 'application/x-www-form-urlencoded'})
+    .auth('client', 'secret')
+    .send("grant_type="+req.query.grant_type)
+    .send("username="+req.query.username)
+    .send("password="+req.query.password)
+    .end(function (response) {
+      //console.log(response.body);
+      console.log(response.body);
+      res.send(response.body);
+    });
 });
 
 app.get('/secret', app.oauth.authenticate(), function (req, res) {
@@ -165,11 +165,11 @@ services.chat = io
       data.room = users[ids[socket.id].username.username].croom;
       data.username = ids[socket.id].username.username;
 
-	services.chat.to(data.room).emit('msg', {
-	  message: data.msg,
-	  username: data.username,
-	  room: data.room
-	});
+      services.chat.to(data.room).emit('msg', {
+	message: data.msg,
+	username: data.username,
+	room: data.room
+      });
 
     });
 
@@ -180,13 +180,13 @@ services.chat = io
       data.room = users[ids[socket.id].username.username].croom;
       data.username = ids[socket.id].username.username;
 
-       var user = data.msg.to;
-	var msg = data.msg.msg;
-	users[user].socket.emit("msg", {
-	  message: msg,
-	  username: data.username,
-	  room:data.room
-	});
+      var user = data.msg.to;
+      var msg = data.msg.msg;
+      users[user].socket.emit("msg", {
+	message: msg,
+	username: data.username,
+	room:data.room
+      });
     });
 
     socket.on('disconnect', function() {
@@ -421,7 +421,7 @@ services.RTData = io
 	  rooms[room] = {
 	    users: [
 	      data.username
-	      ]
+	    ]
 	  }
 	}
 	else {
