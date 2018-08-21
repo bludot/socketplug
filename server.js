@@ -66,7 +66,7 @@ var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 
-http.listen(8081, process.env.IP);
+http.listen(9000, process.env.IP);
 
 var rooms = {
   lobby: {
